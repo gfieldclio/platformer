@@ -80,7 +80,7 @@ while True:
 
     displaysurface.fill((0, 0, 0))
     font = pygame.font.SysFont("Verdana", 20)
-    score = font.render(str(P1.score), True, (123, 255, 0))
+    score = font.render(str(P1.score), True, (123, 123, 255))
     displaysurface.blit(score, (WIDTH/2, 10))
 
     P1.update()

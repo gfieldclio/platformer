@@ -9,8 +9,8 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.platforms = platforms
 
-        self.surf = pygame.Surface((30, 30))
-        self.surf.fill((128, 40, 255))
+        self.surf = pygame.image.load("assets/player.png")
+        self.surf = pygame.transform.scale(self.surf, (40, 40))
         self.rect = self.surf.get_rect()
 
         self.pos = vec(10, 385)
