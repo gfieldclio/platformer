@@ -26,6 +26,9 @@ platforms.add(PT1)
 P1 = Player(platforms)
 all_sprites.add(P1)
 
+pygame.mixer.music.load("assets/music.ogg")
+pygame.mixer.music.play(loops=-1)
+
 
 def plat_gen():
     while len(platforms) < 7:
@@ -81,7 +84,8 @@ while True:
     displaysurface.fill((0, 0, 0))
     font = pygame.font.SysFont("Verdana", 20)
     score = font.render(str(P1.score), True, (123, 123, 255))
-    displaysurface.blit(score, (WIDTH/2, 10))
+    score_rect = score.get_rect(center=(WIDTH/2, 15))
+    displaysurface.blit(score, score_rect)
 
     P1.update()
     for entity in all_sprites:
@@ -99,10 +103,18 @@ while True:
     if P1.rect.top > HEIGHT:
         for entity in all_sprites:
             entity.kill()
+            pygame.mixer.music.unload()
+            pygame.mixer.music.load("assets/gameover.ogg")
+            pygame.mixer.music.play()
             time.sleep(1)
             displaysurface.fill((255, 0, 0))
+            font = pygame.font.SysFont("Verdana", 50)
+            text = font.render("Game Over", True, (0, 0, 0))
+            text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
+            displaysurface.blit(text, text_rect)
+
             pygame.display.update()
-            time.sleep(1)
+            time.sleep(3)
             pygame.quit()
             sys.exit()
 
