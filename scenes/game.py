@@ -18,6 +18,7 @@ class GameScene():
             HEIGHT - (FLOOR_HEIGHT / 2)
         )
         PT1.moving = False
+        PT1.score = False
         PT1.surf.fill((255, 0, 0))
         state.highest_platform = HEIGHT - (FLOOR_HEIGHT / 2)
 
@@ -45,9 +46,13 @@ class GameScene():
                 if event.key == pygame.K_SPACE:
                     self.player.cancel_jump()
 
-        self.displaysurface.fill((0, 0, 0))
+        self.displaysurface.fill((
+            min(state.score, 255),
+            min(state.score, 255),
+            min(state.score, 255)
+        ))
         font = pygame.font.SysFont("Verdana", FONT_SIZE)
-        score = font.render(str(self.player.score), True, (123, 123, 255))
+        score = font.render(str(state.score), True, (123, 123, 255))
         score_rect = score.get_rect(center=(WIDTH/2, FONT_SIZE * 0.75))
         self.displaysurface.blit(score, score_rect)
 

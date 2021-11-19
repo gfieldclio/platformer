@@ -2,6 +2,7 @@ import pygame
 from pygame.math import Vector2 as vec
 from pygame.locals import *
 from constants import *
+import state
 
 
 class Player(pygame.sprite.Sprite):
@@ -61,7 +62,7 @@ class Player(pygame.sprite.Sprite):
             self.vel.y = 0
             if platform.score:
                 platform.score = False
-                self.score += 1
+                state.score += 1
 
     def jump(self):
         self.gliding = True
