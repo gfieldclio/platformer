@@ -1,4 +1,3 @@
-from os import stat
 import pygame
 from pygame.locals import *
 from constants import *
