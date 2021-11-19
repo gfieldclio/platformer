@@ -80,7 +80,9 @@ class GameScene():
         if self.player.rect.top > HEIGHT:
             for entity in self.all_sprites:
                 entity.kill()
-                state.scene = "game_over"
+            self.all_sprites.empty()
+            self.platforms.empty()
+            state.scene = "game_over"
 
     def _generate_platforms(self):
         while state.highest_platform > 0:
