@@ -3,7 +3,7 @@ import random
 import sys
 from pygame.locals import *
 from constants import *
-from sprites import Player, Platform
+from sprites import Player, Platform, Glider
 import state
 
 
@@ -24,6 +24,8 @@ class GameScene():
 
         self.player = Player(self.platforms)
         self.all_sprites.add(self.player)
+        self.glider = Glider(self.player)
+        self.all_sprites.add(self.glider)
 
         for x in range(6):
             pl = Platform()
@@ -90,7 +92,7 @@ class GameScene():
         if pygame.sprite.spritecollideany(platform, self.platforms):
             return True
         else:
-            platform_vertical_padding = 40
+            platform_vertical_padding = 30
             for entity in self.platforms:
                 if (abs(platform.rect.top - entity.rect.bottom) < platform_vertical_padding) or (abs(platform.rect.bottom - entity.rect.top) < platform_vertical_padding):
                     return True

@@ -16,18 +16,29 @@ class Player(pygame.sprite.Sprite):
         self.pos = vec(10, 385)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
-        self.jumping = False
+        self.gliding = False
+        self.facing = K_RIGHT
         self.score = 0
 
     def move(self):
         self.acc = vec(0, 0.5)
+        if self.is_gliding():
+            self.acc.y = 0.1
 
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_LEFT]:
             self.acc.x += -ACC
+            if self.facing == K_RIGHT:
+                self.surf = pygame.transform.flip(
+                    self.surf, flip_x=True, flip_y=False)
+                self.facing = K_LEFT
         if pressed_keys[K_RIGHT]:
             self.acc.x += ACC
+            if self.facing == K_LEFT:
+                self.surf = pygame.transform.flip(
+                    self.surf, flip_x=True, flip_y=False)
+                self.facing = K_RIGHT
 
         self.acc.x += self.vel.x * FRIC
         self.vel += self.acc
@@ -43,7 +54,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         platform = self._platform()
         if platform and self.vel.y > 0:
-            self.jumping = False
+            self.gliding = False
             self.pos.y = platform.rect.top + 1
             self.vel.y = 0
             if platform.score:
@@ -51,15 +62,17 @@ class Player(pygame.sprite.Sprite):
                 self.score += 1
 
     def jump(self):
+        self.gliding = True
         if self._platform():
-            self.jumping = True
             self.vel.y = -15
 
     def cancel_jump(self):
-        if self.jumping:
-            self.jumping = False
-            if self.vel.y < -3:
-                self.vel.y = -3
+        self.gliding = False
+        if self.vel.y < -3:
+            self.vel.y = -3
+
+    def is_gliding(self):
+        return self.gliding and self.vel.y > 0
 
     def _platform(self):
         hits = pygame.sprite.spritecollide(self, self.platforms, False)
