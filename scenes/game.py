@@ -27,9 +27,9 @@ class GameScene():
         self.glider = Glider(self.player)
         self.all_sprites.add(self.glider)
 
-        for x in range(6):
+        for x in range(5):
             pl = Platform()
-            height = HEIGHT - ((x+1)*60) - random.randint(20, 40)
+            height = HEIGHT - ((x+1)*70) - random.randint(20, 40)
             pl.rect.center = (
                 random.randint(0, WIDTH-10),
                 height
@@ -74,7 +74,7 @@ class GameScene():
                 state.scene = "game_over"
 
     def _generate_platforms(self):
-        while len(self.platforms) < 7:
+        while len(self.platforms) < 6:
             width = random.randrange(50, 100)
             half_width = int(round(width / 2))
             p = Platform()
@@ -92,7 +92,7 @@ class GameScene():
         if pygame.sprite.spritecollideany(platform, self.platforms):
             return True
         else:
-            platform_vertical_padding = 30
+            platform_vertical_padding = 40
             for entity in self.platforms:
                 if (abs(platform.rect.top - entity.rect.bottom) < platform_vertical_padding) or (abs(platform.rect.bottom - entity.rect.top) < platform_vertical_padding):
                     return True
