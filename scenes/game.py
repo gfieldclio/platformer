@@ -34,6 +34,9 @@ class GameScene():
 
         self._generate_platforms()
 
+    def setup(self):
+        pass
+
     def render(self):
         for event in pygame.event.get():
             if event.type == QUIT:

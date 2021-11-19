@@ -1,3 +1,4 @@
+from os import stat
 import pygame
 from pygame.locals import *
 from constants import *
@@ -17,11 +18,22 @@ pygame.display.set_caption("Game")
 game_over_scene = GameOverScene(displaysurface)
 game_scene = GameScene(displaysurface)
 
-while True:
+
+def get_game_scene():
     if state.scene == "game":
-        game_scene.render()
+        return game_scene
     elif state.scene == "game_over":
-        game_over_scene.render()
+        return game_over_scene
+
+
+while True:
+    scene = get_game_scene()
+
+    if state.previous_scene != state.scene:
+        scene.setup()
+        state.previous_scene = state.scene
+
+    scene.render()
 
     pygame.display.update()
     FramePerSec.tick(FPS)
