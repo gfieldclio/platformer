@@ -11,11 +11,11 @@ class GameScene():
     def __init__(self, displaysurface):
         self.displaysurface = displaysurface
 
-        PT1 = Platform()
+        PT1 = Platform(WIDTH, 20)
         PT1.moving = False
-        PT1.surf = pygame.Surface((WIDTH, 20))
         PT1.surf.fill((255, 0, 0))
         PT1.rect = PT1.surf.get_rect(center=(WIDTH/2, HEIGHT - 10))
+        state.highest_platform = HEIGHT - 10
 
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(PT1)
@@ -27,15 +27,7 @@ class GameScene():
         self.glider = Glider(self.player)
         self.all_sprites.add(self.glider)
 
-        for x in range(5):
-            pl = Platform()
-            height = HEIGHT - ((x+1)*70) - random.randint(20, 40)
-            pl.rect.center = (
-                random.randint(0, WIDTH-10),
-                height
-            )
-            self.platforms.add(pl)
-            self.all_sprites.add(pl)
+        self._generate_platforms()
 
     def render(self):
         for event in pygame.event.get():
@@ -61,11 +53,13 @@ class GameScene():
             entity.move()
 
         if self.player.rect.top <= HEIGHT / 3:
-            self.player.pos.y += abs(self.player.vel.y)
+            y_screen_shift = abs(self.player.vel.y)
+            self.player.pos.y += y_screen_shift
             for plat in self.platforms:
-                plat.rect.y += abs(self.player.vel.y)
+                plat.rect.y += y_screen_shift
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
+            state.highest_platform += y_screen_shift
             self._generate_platforms()
 
         if self.player.rect.top > HEIGHT:
@@ -74,26 +68,14 @@ class GameScene():
                 state.scene = "game_over"
 
     def _generate_platforms(self):
-        while len(self.platforms) < 6:
+        while state.highest_platform > 0:
             width = random.randrange(50, 100)
             half_width = int(round(width / 2))
-            p = Platform()
-            grouped = True
-            while grouped:
-                p.rect.center = (
-                    random.randrange(half_width, WIDTH - half_width),
-                    random.randrange(-110, -10)
-                )
-                grouped = self._check_platform_grouping(p)
+            x_pos = random.randrange(half_width, WIDTH - half_width)
+            y_pos = state.highest_platform - random.randrange(140, 160)
+            p = Platform(width, 12)
+            p.rect.center = (x_pos, y_pos)
+
             self.platforms.add(p)
             self.all_sprites.add(p)
-
-    def _check_platform_grouping(self, platform):
-        if pygame.sprite.spritecollideany(platform, self.platforms):
-            return True
-        else:
-            platform_vertical_padding = 40
-            for entity in self.platforms:
-                if (abs(platform.rect.top - entity.rect.bottom) < platform_vertical_padding) or (abs(platform.rect.bottom - entity.rect.top) < platform_vertical_padding):
-                    return True
-            return False
+            state.highest_platform = y_pos
