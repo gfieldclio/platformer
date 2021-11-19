@@ -67,9 +67,12 @@ class GameScene():
             for plat in self.platforms:
                 plat.rect.y += y_screen_shift
                 if plat.rect.top >= HEIGHT:
-                    plat.kill()
+                    self._remove_platform(plat)
             state.highest_platform += y_screen_shift
             self._generate_platforms()
+        for plat in self.platforms:
+            if plat.exists == False:
+                self._remove_platform(plat)
 
         if self.player.rect.top > HEIGHT:
             for entity in self.all_sprites:
@@ -89,3 +92,8 @@ class GameScene():
             self.platforms.add(p)
             self.all_sprites.add(p)
             state.highest_platform = y_pos
+
+    def _remove_platform(self, platform):
+        platform.kill()
+        self.platforms.remove(platform)
+        self.all_sprites.remove(platform)

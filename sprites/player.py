@@ -57,12 +57,14 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         platform = self._platform()
         if platform and self.vel.y > 0:
-            self.gliding = False
-            self.pos.y = platform.rect.top + 1
-            self.vel.y = 0
-            if platform.score:
-                platform.score = False
-                state.score += 1
+            platform.fade()
+            if self.vel.y > 0:
+                self.gliding = False
+                self.pos.y = platform.rect.top + 1
+                self.vel.y = 0
+                if platform.score:
+                    platform.score = False
+                    state.score += 1
 
     def jump(self):
         self.gliding = True
