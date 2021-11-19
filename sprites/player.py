@@ -10,10 +10,11 @@ class Player(pygame.sprite.Sprite):
         self.platforms = platforms
 
         self.surf = pygame.image.load("assets/player.png")
-        self.surf = pygame.transform.scale(self.surf, (40, 40))
+        self.surf = pygame.transform.scale(
+            self.surf, (PLAYER_SIZE, PLAYER_SIZE))
         self.rect = self.surf.get_rect()
 
-        self.pos = vec(10, 385)
+        self.pos = vec(PLAYER_SIZE/2, HEIGHT - FLOOR_HEIGHT)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.gliding = False
@@ -21,27 +22,28 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
 
     def move(self):
-        self.acc = vec(0, 0.5)
-        if self.is_gliding():
-            self.acc.y = 0.1
+        self.acc = vec(0, GRAVITY)
 
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_LEFT]:
-            self.acc.x += -ACC
+            self.acc.x += -ACCELERATION
             if self.facing == K_RIGHT:
                 self.surf = pygame.transform.flip(
                     self.surf, flip_x=True, flip_y=False)
                 self.facing = K_LEFT
         if pressed_keys[K_RIGHT]:
-            self.acc.x += ACC
+            self.acc.x += ACCELERATION
             if self.facing == K_LEFT:
                 self.surf = pygame.transform.flip(
                     self.surf, flip_x=True, flip_y=False)
                 self.facing = K_RIGHT
 
-        self.acc.x += self.vel.x * FRIC
+        self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
+        if self.is_gliding():
+            self.vel.y = min(self.acc.y, GLIDER_VELOCITY)
+
         self.pos += self.vel + 0.5 * self.acc
 
         if self.pos.x > WIDTH:
@@ -64,12 +66,12 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         self.gliding = True
         if self._platform():
-            self.vel.y = -15
+            self.vel.y = JUMP_VELOCITY
 
     def cancel_jump(self):
         self.gliding = False
-        if self.vel.y < -3:
-            self.vel.y = -3
+        if self.vel.y < JUMP_CANCEL_VELOCITY:
+            self.vel.y = JUMP_CANCEL_VELOCITY
 
     def is_gliding(self):
         return self.gliding and self.vel.y > 0

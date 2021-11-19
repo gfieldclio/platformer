@@ -11,11 +11,15 @@ class GameScene():
     def __init__(self, displaysurface):
         self.displaysurface = displaysurface
 
-        PT1 = Platform(WIDTH, 20)
+        PT1 = Platform(
+            WIDTH,
+            FLOOR_HEIGHT,
+            WIDTH/2,
+            HEIGHT - (FLOOR_HEIGHT / 2)
+        )
         PT1.moving = False
         PT1.surf.fill((255, 0, 0))
-        PT1.rect = PT1.surf.get_rect(center=(WIDTH/2, HEIGHT - 10))
-        state.highest_platform = HEIGHT - 10
+        state.highest_platform = HEIGHT - (FLOOR_HEIGHT / 2)
 
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(PT1)
@@ -42,9 +46,9 @@ class GameScene():
                     self.player.cancel_jump()
 
         self.displaysurface.fill((0, 0, 0))
-        font = pygame.font.SysFont("Verdana", 20)
+        font = pygame.font.SysFont("Verdana", FONT_SIZE)
         score = font.render(str(self.player.score), True, (123, 123, 255))
-        score_rect = score.get_rect(center=(WIDTH/2, 15))
+        score_rect = score.get_rect(center=(WIDTH/2, FONT_SIZE * 0.75))
         self.displaysurface.blit(score, score_rect)
 
         self.player.update()
@@ -69,12 +73,13 @@ class GameScene():
 
     def _generate_platforms(self):
         while state.highest_platform > 0:
-            width = random.randrange(50, 100)
+            width = random.randrange(PLATFORM_MIN_WIDTH, PLATFORM_MAX_WIDTH)
             half_width = int(round(width / 2))
             x_pos = random.randrange(half_width, WIDTH - half_width)
-            y_pos = state.highest_platform - random.randrange(140, 160)
-            p = Platform(width, 12)
-            p.rect.center = (x_pos, y_pos)
+            y_offset = random.randrange(PLATFORM_MIN_Y_GAP, PLATFORM_MAX_Y_GAP)
+            y_pos = state.highest_platform - y_offset
+
+            p = Platform(width, PLATFORM_HEIGHT, x_pos, y_pos)
 
             self.platforms.add(p)
             self.all_sprites.add(p)

@@ -10,7 +10,10 @@ class Glider(pygame.sprite.Sprite):
         self.player = player
 
         self.surf = pygame.image.load("assets/glider.png")
-        self.surf = pygame.transform.scale(self.surf, (60, 60))
+        self.surf = pygame.transform.scale(
+            self.surf,
+            (GLIDER_SIZE, GLIDER_SIZE)
+        )
         self.rect = self.surf.get_rect()
         self.facing = K_RIGHT
 
@@ -21,6 +24,6 @@ class Glider(pygame.sprite.Sprite):
                 self.surf, flip_x=True, flip_y=False)
 
         if self.player.is_gliding():
-            self.rect.midbottom = self.player.pos - vec(0, 40)
+            self.rect.midbottom = self.player.pos - vec(0, PLAYER_SIZE)
         else:
             self.rect.midbottom = vec(-50, -50)

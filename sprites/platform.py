@@ -4,14 +4,14 @@ from constants import *
 
 
 class Platform(pygame.sprite.Sprite):
-    def __init__(self, width, height):
+    def __init__(self, width, height, x_pos, y_pos):
         super().__init__()
         self.surf = pygame.Surface((width, height))
         self.surf.fill((0, 255, 0))
         self.rect = self.surf.get_rect(
             center=(
-                random.randint(0, WIDTH-10),
-                random.randint(0, HEIGHT-30)
+                x_pos,
+                y_pos
             )
         )
         self.score = True
